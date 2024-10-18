@@ -1,6 +1,11 @@
 import pandas as pd
 import os
 import logging
+import ipaddress
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+import numpy as np
+
+
 
 # Logging configuration
 log_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'logs')
@@ -25,6 +30,9 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 logger.addHandler(info_handler)
 logger.addHandler(error_handler)
+
+
+
 
 def data_loader(path):
     """Load data from a CSV file."""
@@ -116,3 +124,118 @@ def impute_with_historical_averages(df: pd.DataFrame) -> pd.DataFrame:
     
     logger.info('Missing values imputed with historical averages')
     return df
+
+
+def ip_to_int(ip):
+    """
+    Convert an IP address string to its integer equivalent.
+    """
+    try:
+        return int(ipaddress.ip_address(ip))
+    except ValueError:
+        logger.error(f"Invalid IP address encountered: {ip}")
+        return None
+
+def merge_datasets_for_geolocation(df_fraud, df_ip_country):
+    """
+    Merge Fraud_Data.csv and IpAddress_to_Country.csv for geolocation analysis.
+
+    Parameters:
+    df_fraud (pd.DataFrame): DataFrame containing fraud transaction data with 'ip_address' column.
+    df_ip_country (pd.DataFrame): DataFrame containing IP address ranges and country data.
+
+    Returns:
+    pd.DataFrame: Merged DataFrame with geolocation (country) information based on IP address.
+    """
+    logger.info('Starting merge of datasets for geolocation analysis')
+
+    try:
+        # Convert IP address in Fraud_Data.csv to integer format
+        logger.info('Converting IP addresses in fraud data to integer format')
+        df_fraud['ip_address_int'] = df_fraud['ip_address'].apply(ip_to_int)
+
+        # Convert lower and upper bound IP addresses in IpAddress_to_Country.csv to integer format
+        logger.info('Converting IP address bounds in country data to integer format')
+        df_ip_country['lower_bound_ip_address_int'] = df_ip_country['lower_bound_ip_address'].apply(ip_to_int)
+        df_ip_country['upper_bound_ip_address_int'] = df_ip_country['upper_bound_ip_address'].apply(ip_to_int)
+
+        # Drop rows with invalid IP addresses (None values after conversion)
+        logger.info('Dropping rows with invalid IP addresses')
+        df_fraud.dropna(subset=['ip_address_int'], inplace=True)
+        df_ip_country.dropna(subset=['lower_bound_ip_address_int', 'upper_bound_ip_address_int'], inplace=True)
+
+        # Merge: For each IP address in fraud data, find where it falls within the lower and upper bounds in IP address to country data
+        logger.info('Merging datasets based on IP address ranges')
+        merged_df = pd.merge_asof(
+            df_fraud.sort_values('ip_address_int'),  # Sort by IP address for merge_asof to work
+            df_ip_country.sort_values('lower_bound_ip_address_int'),  # Sort by lower bound IP for merge_asof
+            left_on='ip_address_int',  # Column in Fraud_Data.csv to match
+            right_on='lower_bound_ip_address_int',  # Column in IpAddress_to_Country.csv to match
+            direction='backward',  # Find closest matching lower_bound_ip_address less than or equal to the ip_address_int
+            suffixes=('_fraud', '_country')
+        )
+
+        # Filter the rows where the 'ip_address_int' is within the IP range (lower_bound_ip_address and upper_bound_ip_address)
+        logger.info('Filtering merged data to ensure IP address is within the specified range')
+        merged_df = merged_df[
+            (merged_df['ip_address_int'] >= merged_df['lower_bound_ip_address_int']) &
+            (merged_df['ip_address_int'] <= merged_df['upper_bound_ip_address_int'])
+        ]
+
+        logger.info('Merge completed successfully')
+        return merged_df
+
+    except Exception as e:
+        logger.error(f"An error occurred during merging: {e}")
+        return df_fraud
+    
+
+
+
+
+
+def encode_categorical_features(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Encode categorical features using one-hot encoding
+    
+    Args:
+        df: Input DataFrame
+    
+    Returns:
+        DataFrame with encoded categorical features
+    """
+    logger.info('Encoding categorical features using one-hot encoding')
+    df_copy = df.copy()
+    
+    categorical_columns = df_copy.select_dtypes(include=['object']).columns
+    exclude_columns = ['ip_address', 'user_id', 'device_id']
+    categorical_columns = [col for col in categorical_columns if col not in exclude_columns]
+    
+    # Apply one-hot encoding
+    df_encoded = pd.get_dummies(df_copy, columns=categorical_columns, drop_first=True)
+    
+    logger.info('Categorical features encoded successfully')
+    return df_encoded
+
+def normalize_features(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Normalize numerical features using StandardScaler
+    
+    Args:
+        df: Input DataFrame
+    
+    Returns:
+        DataFrame with normalized features
+    """
+    logger.info('Normalizing numerical features using StandardScaler')
+    df_copy = df.copy()
+    scaler = StandardScaler()
+    
+    numeric_columns = df_copy.select_dtypes(include=[np.number]).columns
+    exclude_columns = ['class', 'Class', 'user_id', 'device_id']
+    numeric_columns = [col for col in numeric_columns if col not in exclude_columns]
+    
+    df_copy[numeric_columns] = scaler.fit_transform(df_copy[numeric_columns])
+    
+    logger.info('Numerical features normalized successfully')
+    return df_copy

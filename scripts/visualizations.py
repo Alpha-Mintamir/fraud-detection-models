@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import os
 import logging
 
+
 # Logging configuration
 log_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'logs')
 
@@ -52,22 +53,25 @@ def plot_bivariate_analysis(df, columns):
     plots = []
     for i in range(len(columns)):
         for j in range(i + 1, len(columns)):
-            plt.figure(figsize=(10, 5))
+            plt.figure(figsize=(10, 5))  # Set the figure size
             
             try:
+                # Check if either column is of object type (categorical)
                 if df[columns[i]].dtype == 'object' or df[columns[j]].dtype == 'object':
-                    plot = sns.countplot(data=df, x=columns[i], hue=columns[j])
-                    plt.title(f'Count Plot for {columns[i]} vs {columns[j]}')
+                    sns.countplot(data=df, x=columns[i], hue=columns[j])
+                    plt.title(f'Count Plot: {columns[i]} vs {columns[j]}')
                     logger.info(f'Successfully plotted count plot for {columns[i]} vs {columns[j]}')
                 else:
-                    plot = sns.scatterplot(data=df, x=columns[i], y=columns[j])
-                    plt.title(f'Scatter Plot for {columns[i]} vs {columns[j]}')
+                    sns.scatterplot(data=df, x=columns[i], y=columns[j])
+                    plt.title(f'Scatter Plot: {columns[i]} vs {columns[j]}')
                     logger.info(f'Successfully plotted scatter plot for {columns[i]} vs {columns[j]}')
-                
+
                 plt.xlabel(columns[i])
                 plt.ylabel(columns[j])
-                plt.show()
-                plots.append(plot)
+                plt.tight_layout()  # Adjust layout
+                plt.show()  # Show the plot
+                
             except Exception as e:
                 logger.error(f'Error plotting {columns[i]} vs {columns[j]}: {e}')
+    
     return plots
