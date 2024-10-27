@@ -1,0 +1,15 @@
+artifact_uri: file:///content/mlruns/0/ff6824fccd084443833a0922ba45f3d8/artifacts
+end_time: 1729988902757
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: ff6824fccd084443833a0922ba45f3d8
+run_name: bright-worm-982
+run_uuid: ff6824fccd084443833a0922ba45f3d8
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729988900896
+status: 3
+tags: []
+user_id: root

@@ -1,0 +1,15 @@
+artifact_uri: file:///c:/fraud-detection-models/notebook/mlruns/0/229e4343f03d44808261eef8c3b4449e/artifacts
+end_time: 1729989977288
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 229e4343f03d44808261eef8c3b4449e
+run_name: upset-trout-480
+run_uuid: 229e4343f03d44808261eef8c3b4449e
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729989977015
+status: 4
+tags: []
+user_id: Admin

@@ -1,0 +1,15 @@
+artifact_uri: file:///content/mlruns/0/47b704c68c8b42dbaa4140d41d83ef65/artifacts
+end_time: 1729988891037
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 47b704c68c8b42dbaa4140d41d83ef65
+run_name: omniscient-toad-584
+run_uuid: 47b704c68c8b42dbaa4140d41d83ef65
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729988891022
+status: 4
+tags: []
+user_id: root

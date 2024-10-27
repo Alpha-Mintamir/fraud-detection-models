@@ -1,0 +1,15 @@
+artifact_uri: file:///c:/fraud-detection-models/notebook/mlruns/0/83e2206341c447d6bdd802931b7ac921/artifacts
+end_time: 1729989976645
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 83e2206341c447d6bdd802931b7ac921
+run_name: lyrical-bee-377
+run_uuid: 83e2206341c447d6bdd802931b7ac921
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729989899503
+status: 3
+tags: []
+user_id: Admin

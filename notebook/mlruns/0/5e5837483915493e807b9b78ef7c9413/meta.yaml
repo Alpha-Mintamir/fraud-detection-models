@@ -1,0 +1,15 @@
+artifact_uri: file:///c:/fraud-detection-models/notebook/mlruns/0/5e5837483915493e807b9b78ef7c9413/artifacts
+end_time: 1729869222258
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 5e5837483915493e807b9b78ef7c9413
+run_name: treasured-stoat-936
+run_uuid: 5e5837483915493e807b9b78ef7c9413
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729869208187
+status: 3
+tags: []
+user_id: Admin

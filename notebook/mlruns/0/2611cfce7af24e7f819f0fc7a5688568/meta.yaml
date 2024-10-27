@@ -1,0 +1,15 @@
+artifact_uri: file:///c:/fraud-detection-models/notebook/mlruns/0/2611cfce7af24e7f819f0fc7a5688568/artifacts
+end_time: 1729806043238
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 2611cfce7af24e7f819f0fc7a5688568
+run_name: dazzling-snail-192
+run_uuid: 2611cfce7af24e7f819f0fc7a5688568
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729805090087
+status: 3
+tags: []
+user_id: Admin

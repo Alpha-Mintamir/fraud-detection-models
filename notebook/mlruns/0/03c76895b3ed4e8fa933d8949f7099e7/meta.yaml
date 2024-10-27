@@ -1,0 +1,15 @@
+artifact_uri: file:///c:/fraud-detection-models/notebook/mlruns/0/03c76895b3ed4e8fa933d8949f7099e7/artifacts
+end_time: 1729989825008
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 03c76895b3ed4e8fa933d8949f7099e7
+run_name: peaceful-shark-88
+run_uuid: 03c76895b3ed4e8fa933d8949f7099e7
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729989820008
+status: 3
+tags: []
+user_id: Admin
