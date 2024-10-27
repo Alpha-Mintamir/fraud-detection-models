@@ -1,0 +1,15 @@
+artifact_uri: file:///c:/fraud-detection-models/notebook/mlruns/0/49c188b0aa204c33bb6003ec124853b7/artifacts
+end_time: 1729805090073
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 49c188b0aa204c33bb6003ec124853b7
+run_name: sincere-duck-975
+run_uuid: 49c188b0aa204c33bb6003ec124853b7
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729804979785
+status: 3
+tags: []
+user_id: Admin

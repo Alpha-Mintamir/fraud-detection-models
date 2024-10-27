@@ -1,89 +1,96 @@
-# scripts/model_building.py
-
-import pandas as pd
+import mlflow
+import mlflow.sklearn
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import classification_report, confusion_matrix
-import mlflow
+from sklearn.metrics import classification_report, accuracy_score
+import numpy as np
+import pandas as pd
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout, LSTM, Conv2D, Flatten
 
-def load_data(fraud_data_path, creditcard_data_path):
-    # Load the datasets
-    fraud_data = pd.read_csv(fraud_data_path)
-    creditcard_data = pd.read_csv(creditcard_data_path)
-    return fraud_data, creditcard_data
+class ModelTrainer:
+    def __init__(self, df, target_column, test_size=0.2, random_state=42):
+        """
+        Initialize the ModelTrainer with dataset and parameters.
+        
+        Parameters:
+        - df: pd.DataFrame - The input dataset containing features and the target column.
+        - target_column: str - The name of the target column.
+        - test_size: float - Proportion of the dataset to include in the test split.
+        - random_state: int - Seed for random number generator.
+        """
+        self.df = df
+        self.target_column = target_column
+        self.test_size = test_size
+        self.random_state = random_state
+        self.X_train, self.X_test, self.y_train, self.y_test = self.prepare_data()
 
-def preprocess_data(fraud_data, creditcard_data):
-    # Separate features and target
-    X_fraud = fraud_data.drop(columns=['class'])
-    y_fraud = fraud_data['class']
-    
-    X_creditcard = creditcard_data.drop(columns=['Class'])
-    y_creditcard = creditcard_data['Class']
-    
-    return X_fraud, y_fraud, X_creditcard, y_creditcard
+    def prepare_data(self):
+        """Prepare the data by splitting it into training and testing sets."""
+        X = self.df.drop(columns=[self.target_column])
+        y = self.df[self.target_column]
+        return train_test_split(X, y, test_size=self.test_size, random_state=self.random_state)
 
-def train_models(X_train, y_train):
-    # Initialize models
-    models = {
-        'Logistic Regression': LogisticRegression(),
-        'Decision Tree': DecisionTreeClassifier(),
-        'Random Forest': RandomForestClassifier(),
-        'Gradient Boosting': GradientBoostingClassifier(),
-        'MLP Classifier': MLPClassifier(max_iter=500)
-    }
-    
-    trained_models = {}
-    
-    for name, model in models.items():
-        model.fit(X_train, y_train)
-        trained_models[name] = model
-    
-    return trained_models
+    def train_logistic_regression(self):
+        """Train and evaluate Logistic Regression model."""
+        model = LogisticRegression()
+        return self.train_and_evaluate(model, "Logistic Regression")
 
-def evaluate_models(trained_models, X_test, y_test):
-    evaluation_results = {}
-    
-    for name, model in trained_models.items():
-        y_pred = model.predict(X_test)
-        evaluation_results[name] = {
-            'report': classification_report(y_test, y_pred),
-            'confusion_matrix': confusion_matrix(y_test, y_pred)
-        }
-    
-    return evaluation_results
+    def train_decision_tree(self):
+        """Train and evaluate Decision Tree model."""
+        model = DecisionTreeClassifier()
+        return self.train_and_evaluate(model, "Decision Tree")
 
-def main(fraud_data_path, creditcard_data_path):
-    # Load data
-    fraud_data, creditcard_data = load_data(fraud_data_path, creditcard_data_path)
-    
-    # Preprocess data
-    X_fraud, y_fraud, X_creditcard, y_creditcard = preprocess_data(fraud_data, creditcard_data)
-    
-    # Train-test split for both datasets
-    X_train_fraud, X_test_fraud, y_train_fraud, y_test_fraud = train_test_split(X_fraud, y_fraud, test_size=0.2, random_state=42)
-    X_train_creditcard, X_test_creditcard, y_train_creditcard, y_test_creditcard = train_test_split(X_creditcard, y_creditcard, test_size=0.2, random_state=42)
-    
-    # Train models
-    trained_models_fraud = train_models(X_train_fraud, y_train_fraud)
-    trained_models_creditcard = train_models(X_train_creditcard, y_train_creditcard)
-    
-    # Evaluate models
-    evaluation_results_fraud = evaluate_models(trained_models_fraud, X_test_fraud, y_test_fraud)
-    evaluation_results_creditcard = evaluate_models(trained_models_creditcard, X_test_creditcard, y_test_creditcard)
-    
-    return evaluation_results_fraud, evaluation_results_creditcard
+    def train_random_forest(self):
+        """Train and evaluate Random Forest model."""
+        model = RandomForestClassifier()
+        return self.train_and_evaluate(model, "Random Forest")
 
-if __name__ == '__main__':
-    fraud_data_path = 'path/to/Fraud_Data.csv'  # Update with your path
-    creditcard_data_path = 'path/to/creditcard.csv'  # Update with your path
-    results_fraud, results_creditcard = main(fraud_data_path, creditcard_data_path)
-    print("Fraud Data Evaluation Results:")
-    for model, result in results_fraud.items():
-        print(f"{model}:\n{result['report']}\nConfusion Matrix:\n{result['confusion_matrix']}\n")
-    
-    print("Credit Card Data Evaluation Results:")
-    for model, result in results_creditcard.items():
-        print(f"{model}:\n{result['report']}\nConfusion Matrix:\n{result['confusion_matrix']}\n")
+    def train_gradient_boosting(self):
+        """Train and evaluate Gradient Boosting model."""
+        model = GradientBoostingClassifier()
+        return self.train_and_evaluate(model, "Gradient Boosting")
+
+    def train_mlp(self):
+        """Train and evaluate Multi-Layer Perceptron (MLP) model."""
+        mlp_model = Sequential([
+            Dense(64, activation='relu', input_shape=(self.X_train.shape[1],)),
+            Dropout(0.5),
+            Dense(32, activation='relu'),
+            Dense(1, activation='sigmoid')  # Change activation for multi-class
+        ])
+        
+        mlp_model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+        with mlflow.start_run():
+            mlp_model.fit(self.X_train, self.y_train, epochs=10, batch_size=32, validation_split=0.1, verbose=1)
+            mlp_loss, mlp_accuracy = mlp_model.evaluate(self.X_test, self.y_test, verbose=0)
+            mlflow.log_param("model_name", "Multi-Layer Perceptron")
+            mlflow.log_metric("accuracy", mlp_accuracy)
+            print(f"Multi-Layer Perceptron Accuracy: {mlp_accuracy:.4f}")
+            return mlp_accuracy
+
+    def train_and_evaluate(self, model, model_name):
+        """Train the model and evaluate its performance."""
+        with mlflow.start_run():
+            model.fit(self.X_train, self.y_train)
+            y_pred = model.predict(self.X_test)
+            accuracy = accuracy_score(self.y_test, y_pred)
+            mlflow.log_param("model_name", model_name)
+            mlflow.log_metric("accuracy", accuracy)
+            print(f"{model_name} Accuracy: {accuracy:.4f}")
+            return accuracy
+
+# Example usage
+# df = pd.read_csv('your_data.csv')
+# trainer = ModelTrainer(df, target_column='target')
+# results = {
+#     "Logistic Regression": trainer.train_logistic_regression(),
+#     "Decision Tree": trainer.train_decision_tree(),
+#     "Random Forest": trainer.train_random_forest(),
+#     "Gradient Boosting": trainer.train_gradient_boosting(),
+#     "Multi-Layer Perceptron": trainer.train_mlp()
+# }
+# print(results)

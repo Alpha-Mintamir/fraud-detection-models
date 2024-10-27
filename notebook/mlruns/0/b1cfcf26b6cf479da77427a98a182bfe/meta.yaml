@@ -1,0 +1,15 @@
+artifact_uri: file:///c:/fraud-detection-models/notebook/mlruns/0/b1cfcf26b6cf479da77427a98a182bfe/artifacts
+end_time: 1729804808990
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: b1cfcf26b6cf479da77427a98a182bfe
+run_name: overjoyed-lynx-8
+run_uuid: b1cfcf26b6cf479da77427a98a182bfe
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729804808326
+status: 4
+tags: []
+user_id: Admin

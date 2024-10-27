@@ -1,0 +1,15 @@
+artifact_uri: file:///c:/fraud-detection-models/notebook/mlruns/0/1beec050df5c4db4b363d69a698f8f7f/artifacts
+end_time: 1729807697120
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 1beec050df5c4db4b363d69a698f8f7f
+run_name: thoughtful-shoat-910
+run_uuid: 1beec050df5c4db4b363d69a698f8f7f
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729806043254
+status: 3
+tags: []
+user_id: Admin

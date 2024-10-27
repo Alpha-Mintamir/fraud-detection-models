@@ -1,0 +1,15 @@
+artifact_uri: file:///c:/fraud-detection-models/notebook/mlruns/0/686ba512b74c436db8fb8044d8e177ad/artifacts
+end_time: 1729807786975
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 686ba512b74c436db8fb8044d8e177ad
+run_name: lyrical-kit-632
+run_uuid: 686ba512b74c436db8fb8044d8e177ad
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729807697136
+status: 3
+tags: []
+user_id: Admin

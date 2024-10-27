@@ -1,0 +1,15 @@
+artifact_uri: file:///c:/fraud-detection-models/notebook/mlruns/0/cdc40dd7deb4454dbea10dca770a2861/artifacts
+end_time: 1729869316825
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: cdc40dd7deb4454dbea10dca770a2861
+run_name: efficient-finch-645
+run_uuid: cdc40dd7deb4454dbea10dca770a2861
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729869222273
+status: 3
+tags: []
+user_id: Admin

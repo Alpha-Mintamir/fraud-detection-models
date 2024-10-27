@@ -1,0 +1,15 @@
+artifact_uri: file:///content/mlruns/0/aa787a32a1b24b21893820d432885393/artifacts
+end_time: 1729988924572
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: aa787a32a1b24b21893820d432885393
+run_name: awesome-sheep-792
+run_uuid: aa787a32a1b24b21893820d432885393
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729988902760
+status: 3
+tags: []
+user_id: root

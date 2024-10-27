@@ -1,0 +1,15 @@
+artifact_uri: file:///content/mlruns/0/4d0d6f64620f4557a11a71b4568e2fc2/artifacts
+end_time: 1729988946188
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 4d0d6f64620f4557a11a71b4568e2fc2
+run_name: gentle-skink-187
+run_uuid: 4d0d6f64620f4557a11a71b4568e2fc2
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729988924580
+status: 3
+tags: []
+user_id: root
